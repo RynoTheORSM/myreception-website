@@ -1,0 +1,6 @@
+/* Tailwind layers — preflight is disabled (see tailwind.config.ts), so
+   this only contributes utilities used by future pages/components.
+   Imported after globals.css so utilities win over component classes. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

@@ -330,6 +330,39 @@ img { max-width: 100%; }
 .state-card h3 { font-size: 18px; }
 .state-card__desc { font-weight: 500; font-size: 13px; line-height: 1.5; color: var(--slate); }
 
+/* Scroll-pinned variant: the section is a tall scroll track and the
+   stage stays stuck for its duration. position: sticky only — native
+   scroll is never captured, so visitors can always scroll straight past. */
+.hiw-pin { height: 360vh; }
+.hiw-pin__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+}
+.hiw-pin__sticky .container { width: 100%; padding-top: 32px; padding-bottom: 32px; }
+.hiw-pin .section-head { margin-bottom: 28px; }
+.hiw-stage { display: grid; }
+.hiw-stage__item { grid-area: 1 / 1; min-width: 0; }
+.hiw-stage .state-card {
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+  background: var(--white);
+}
+.hiw-steps { display: flex; justify-content: center; gap: 18px; margin-top: 28px; }
+.hiw-steps span {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--mist-border);
+  transition: color 0.3s var(--ease-out);
+}
+.hiw-steps span.on { color: var(--workshop-blue); }
+
 .mini { background: var(--mist); border-radius: var(--radius-md); padding: 14px 16px; }
 .mini__title { font-family: var(--font-heading); font-weight: 600; font-size: 13px; color: var(--ink); }
 .mini__line { font-weight: 500; font-size: 14px; color: var(--ink); margin-top: 2px; }

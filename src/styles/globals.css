@@ -332,29 +332,24 @@ img { max-width: 100%; }
 .state-card h3 { font-size: 18px; }
 .state-card__desc { font-weight: 500; font-size: 13px; line-height: 1.5; color: var(--slate); }
 
-/* Scroll-pinned variant: the section is a tall scroll track and the
-   stage stays stuck for its duration. position: sticky only — native
-   scroll is never captured, so visitors can always scroll straight past. */
-.hiw-pin { height: 360vh; }
-.hiw-pin__sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100svh;
-  display: flex;
-  align-items: center;
-}
-.hiw-pin__sticky .container { width: 100%; padding-top: 32px; padding-bottom: 32px; }
-.hiw-pin .section-head { margin-bottom: 28px; }
-.hiw-stage { display: grid; }
-.hiw-stage__item { grid-area: 1 / 1; min-width: 0; }
-.hiw-stage .state-card {
-  max-width: 480px;
+/* Focus sweep: natural flow on every width — focus advances as the cards
+   cross the reading line; scroll is never captured. */
+.hiw-card { display: flex; transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out); }
+.hiw-card .state-card {
   width: 100%;
-  margin: 0 auto;
   background: var(--white);
+  transition: border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
 }
-.hiw-steps { display: flex; justify-content: center; gap: 18px; margin-top: 28px; }
+.hiw-card.is-todo { opacity: 0.3; transform: scale(0.97); }
+.hiw-card.is-done { opacity: 0.55; transform: scale(0.97); }
+.hiw-card.is-focus { transform: scale(1.02); }
+.hiw-card.is-focus .state-card {
+  border-color: var(--ink);
+  box-shadow: 0 12px 32px rgba(26, 37, 48, 0.12);
+}
+.hiw-steps { display: flex; justify-content: center; gap: 18px; }
+.hiw-steps--top { display: none; }
+.hiw-steps--bottom { margin-top: 28px; }
 .hiw-steps span {
   font-family: var(--font-heading);
   font-weight: 600;
@@ -689,6 +684,18 @@ img { max-width: 100%; }
   .states { grid-template-columns: 1fr; gap: 14px; }
   .state-card { padding: 20px; gap: 12px; }
   .state-card__label { font-size: 11px; }
+  /* Natural-flow sweep: the sticky steps bar keeps progress visible while
+     the stacked cards scroll past the reading line. */
+  .hiw-steps--top {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--white);
+    padding: 10px 0;
+    margin-bottom: 8px;
+  }
+  .hiw-steps--bottom { display: none; }
 
   .see-head { grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px; }
   .see-head .kicker { margin-bottom: 14px; padding-bottom: 10px; }

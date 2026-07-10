@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import useReducedMotion from "@/hooks/useReducedMotion";
+import useTurnstile from "@/hooks/useTurnstile";
+import Toast from "@/components/Toast";
+import { supabase } from "@/lib/supabase";
 import { SCENARIOS } from "@/lib/scenarios";
+
+const TOAST_MS = 6000;
 
 /** Slice `str` given the typewriter has typed `avail` chars overall and this
     string starts at offset `from` in the scenario's combined text. */
@@ -12,6 +17,46 @@ const cut = (str: string, from: number, avail: number) => {
 const Hero = () => {
   const reducedMotion = useReducedMotion();
   const [{ scIdx, charN }, setTw] = useState({ scIdx: 0, charN: 0 });
+  const { containerRef, token, reset } = useTurnstile();
+  const [connecting, setConnecting] = useState(false);
+  const [toast, setToast] = useState<{ message: string; detail: string } | null>(null);
+  // Bumped on every submit so a re-submit restarts the auto-dismiss timer.
+  const [toastKey, setToastKey] = useState(0);
+
+  useEffect(() => {
+    if (!toast) return;
+    const id = window.setTimeout(() => setToast(null), TOAST_MS);
+    return () => clearTimeout(id);
+  }, [toast, toastKey]);
+
+  const showToast = (message: string, detail: string) => {
+    setToast({ message, detail });
+    setToastKey((k) => k + 1);
+  };
+
+  const onTalkToLauren = async () => {
+    // Button is disabled until Turnstile hands over a token, so this guard
+    // only catches races (e.g. token expiring mid-click).
+    if (!token || connecting) return;
+    setConnecting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-retell-web-call", {
+        body: { turnstile_token: token },
+      });
+      if (error || !data?.ok) {
+        console.error("create-retell-web-call failed", error ?? data);
+        showToast("Couldn't start the demo.", "Give it another go in a moment.");
+        return;
+      }
+      // TODO(demo voice call): data.access_token is what the next task consumes —
+      // start the browser voice session with retell-client-js-sdk here.
+      console.log("create-retell-web-call ok", data);
+      showToast("Verified — demo call ready.", `Call ${data.call_id} created. Voice session lands in the next build step.`);
+    } finally {
+      setConnecting(false);
+      reset(); // Turnstile tokens are single-use; re-arm for the next click.
+    }
+  };
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -41,8 +86,14 @@ const Hero = () => {
         <h1>The phone rings.<br />You're on the tools.</h1>
         <p className="hero__sub">Lauren answers when you're on the tools, takes the job down properly, then texts and emails you the lead — before the caller rings the next number on the list.</p>
         <div className="hero__ctas">
-          {/* TODO: wire the live-demo phone number (tel:) when it exists */}
-          <button className="btn btn--lg" type="button">Talk to Lauren</button>
+          <button
+            className="btn btn--lg"
+            type="button"
+            disabled={!token || connecting}
+            onClick={onTalkToLauren}
+          >
+            {connecting ? "Connecting…" : "Talk to Lauren"}
+          </button>
           {/* TODO: wire the sample-call audio when the recording exists */}
           <div className="audio-chip">
             <div className="audio-chip__play"><span /></div>
@@ -55,6 +106,9 @@ const Hero = () => {
             </div>
           </div>
         </div>
+        {/* Managed mode: stays empty for most visitors; Cloudflare expands a
+            challenge here only for high-risk traffic. */}
+        <div className="hero__turnstile" ref={containerRef} />
         <p className="hero__note">Live demo — ask her if she's human; she'll tell you straight.</p>
       </div>
       <div className="call-panel">
@@ -81,6 +135,14 @@ const Hero = () => {
           </div>
         </div>
       </div>
+      {toast && (
+        <Toast
+          key={toastKey}
+          message={toast.message}
+          detail={toast.detail}
+          onDismiss={() => setToast(null)}
+        />
+      )}
     </header>
   );
 };

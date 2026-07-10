@@ -153,6 +153,8 @@ img { max-width: 100%; }
 }
 .hero__ctas { display: flex; gap: 14px; margin-top: 32px; align-items: stretch; flex-wrap: wrap; }
 .hero__note { font-family: var(--font-heading); font-weight: 500; font-size: 14px; color: var(--slate); margin: 20px 0 0; }
+/* Empty (invisible-pass) Turnstile container takes no space; only a visible challenge does. */
+.hero__turnstile:not(:empty) { margin-top: 16px; }
 
 .audio-chip {
   display: flex;

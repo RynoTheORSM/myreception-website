@@ -47,6 +47,7 @@ img { max-width: 100%; }
 }
 .btn:hover { background: var(--workshop-blue-hover); color: var(--white); text-decoration: none; }
 .btn:active { background: var(--workshop-blue-active); }
+.btn:disabled { opacity: 0.45; cursor: default; }
 .btn--sm { padding: 8px 14px; font-size: 14px; }
 .btn--lg { padding: 14px 28px; font-size: 16px; }
 .btn--block { width: 100%; display: block; }

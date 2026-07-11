@@ -42,7 +42,7 @@ const MissedCallCalculator = () => {
           </div>
           <div className="calc__result">
             <span className="calc__result-label">Walking to a competitor</span>
-            <span className="calc__result-value">{fmt(weekly)} <small>a week</small></span>
+            <span className="calc__result-value" aria-live="polite" aria-atomic="true">{fmt(weekly)} <small>a week</small></span>
           </div>
         </div>
       </div>

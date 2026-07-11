@@ -34,8 +34,13 @@ const SignupCTA = () => {
     setToastKey((k) => k + 1);
   };
 
+  // Supabase env vars missing (supabase.ts logs the specifics) — the form
+  // can't submit, so show a clear unavailable state instead of a dead form.
+  const unavailable = !supabase;
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!supabase) return;
     // Native required/type=email covers the UI; this guards the insert itself.
     if (!name.trim() || !suburb.trim() || !EMAIL_RE.test(email.trim())) return;
     setSubmitting(true);
@@ -76,6 +81,7 @@ const SignupCTA = () => {
                   placeholder="Dave Nguyen"
                   autoComplete="name"
                   required
+                  disabled={unavailable}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -88,6 +94,7 @@ const SignupCTA = () => {
                   placeholder="dave@davesplumbing.com.au"
                   autoComplete="email"
                   required
+                  disabled={unavailable}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -96,7 +103,7 @@ const SignupCTA = () => {
             <div className="cta__form-row">
               <label className="field field--select">
                 <span>Trade</span>
-                <select name="trade" value={trade} onChange={(e) => setTrade(e.target.value)}>
+                <select name="trade" disabled={unavailable} value={trade} onChange={(e) => setTrade(e.target.value)}>
                   {TRADE_OPTIONS.map((t) => (
                     <option key={t}>{t}</option>
                   ))}
@@ -109,15 +116,22 @@ const SignupCTA = () => {
                   name="suburb"
                   placeholder="Thornbury, VIC"
                   required
+                  disabled={unavailable}
                   value={suburb}
                   onChange={(e) => setSuburb(e.target.value)}
                 />
               </label>
             </div>
-            <button className="btn btn--lg btn--block" type="submit" disabled={submitting}>
+            <button className="btn btn--lg btn--block" type="submit" disabled={submitting || unavailable}>
               Get Lauren on your phones
             </button>
-            <p className="cta__form-note">No spam. We'll only email you about your setup.</p>
+            {unavailable ? (
+              <p className="cta__form-note" role="status">
+                Signups are temporarily unavailable — email <a href="mailto:hello@myreception.com.au">hello@myreception.com.au</a> and we'll get you set up.
+              </p>
+            ) : (
+              <p className="cta__form-note">No spam. We'll only email you about your setup.</p>
+            )}
           </form>
         </div>
       </div>

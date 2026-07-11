@@ -188,6 +188,22 @@ img { max-width: 100%; }
 .audio-chip__track { width: 130px; height: 3px; background: var(--mist-border); border-radius: 2px; }
 .audio-chip__progress { width: 33%; height: 3px; background: var(--workshop-blue); border-radius: 2px; }
 .audio-chip__time { font-weight: 500; font-size: 12px; color: var(--slate); }
+/* Recording not wired yet: dimmed + badged so the chip reads as a preview,
+   not a broken control (it's aria-hidden until the audio exists). */
+.audio-chip--soon { opacity: 0.6; }
+.audio-chip__badge {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--slate);
+  border: 1px solid var(--mist-border);
+  border-radius: var(--radius-pill);
+  padding: 2px 8px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
 
 /* Live-call transcript panel */
 .call-panel { background: var(--mist); border-radius: var(--radius-lg); padding: 28px; }

@@ -7,8 +7,9 @@ const Nav = () => (
       <a href="#how-it-works">How it works</a>
       <a href="#pricing">Pricing</a>
       <a className="login" href="https://app.myreception.com.au/login">Client Login</a>
-      {/* TODO: wire the live-demo phone number (tel:) when it exists */}
-      <button className="btn btn--sm" type="button">Talk to Lauren</button>
+      {/* Anchors to the hero's demo button. TODO: swap in the live-demo
+          phone number (tel:) when it exists. */}
+      <a className="btn btn--sm" href="#talk-to-lauren">Talk to Lauren</a>
     </div>
     <a className="site-nav__login-mobile" href="https://app.myreception.com.au/login">Client Login</a>
   </nav>

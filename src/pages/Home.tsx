@@ -12,19 +12,21 @@ import SignupCTA from "@/components/home/SignupCTA";
 const Home = () => (
   <>
     <Nav />
-    <Hero />
-    <NameStrip />
-    <HowItWorks />
-    <DashboardShowcase />
-    <MissedCallCalculator />
-    {/* Rate card + straight answers share one section grid */}
-    <section className="section" id="pricing">
-      <div className="container rates">
-        <RateCard />
-        <StraightAnswers />
-      </div>
-    </section>
-    <SignupCTA />
+    <main>
+      <Hero />
+      <NameStrip />
+      <HowItWorks />
+      <DashboardShowcase />
+      <MissedCallCalculator />
+      {/* Rate card + straight answers share one section grid */}
+      <section className="section" id="pricing">
+        <div className="container rates">
+          <RateCard />
+          <StraightAnswers />
+        </div>
+      </section>
+      <SignupCTA />
+    </main>
     <Footer />
   </>
 );

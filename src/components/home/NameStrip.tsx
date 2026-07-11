@@ -44,7 +44,7 @@ const NameStrip = () => {
   return (
     <section className="name-strip">
       <div className="container">
-        <div className="name-strip__heading">
+        <h2 className="name-strip__heading">
           Meet{" "}
           <span id="strip-name" style={started ? { width: `${measureNameEm(nm).toFixed(3)}em` } : undefined}>
             <span key={nm}>{nm}.</span>
@@ -54,7 +54,7 @@ const NameStrip = () => {
           {" "}
           <br className="name-strip__br" />
           Your personalised, business receptionist.
-        </div>
+        </h2>
         <p className="name-strip__sub">Pick the receptionist name that suits your business.</p>
       </div>
     </section>

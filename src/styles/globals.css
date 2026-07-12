@@ -205,6 +205,59 @@ img { max-width: 100%; }
   vertical-align: middle;
 }
 
+/* ---- Live demo call bar (Talk to Lauren) ---- */
+.live-call {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  margin-top: 20px;
+  padding: 12px 16px;
+  max-width: 560px;
+  background: var(--mist);
+  border: 1px solid var(--mist-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-heading);
+  font-size: 14px;
+}
+.live-call__text { font-weight: 500; color: var(--ink); }
+.live-call__text a { color: var(--workshop-blue); font-weight: 600; }
+.live-call__timer {
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.live-call__cap { font-weight: 500; color: var(--slate); }
+.live-call__hangup { margin-left: auto; }
+.live-call__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--workshop-blue);
+  flex-shrink: 0;
+  animation: liveCallPulse 1.6s var(--ease-out) infinite;
+}
+/* Pulse quickens while Lauren is speaking — the "she's live" tell. */
+.live-call__dot--talking { animation-duration: 0.8s; }
+.live-call__spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--mist-border);
+  border-top-color: var(--workshop-blue);
+  flex-shrink: 0;
+  animation: liveCallSpin 0.8s linear infinite;
+}
+@keyframes liveCallPulse {
+  0% { box-shadow: 0 0 0 0 rgba(27, 86, 137, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(27, 86, 137, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(27, 86, 137, 0); }
+}
+@keyframes liveCallSpin {
+  to { transform: rotate(360deg); }
+}
+
 /* Live-call transcript panel */
 .call-panel { background: var(--mist); border-radius: var(--radius-lg); padding: 28px; }
 .call-panel__head {
@@ -786,4 +839,5 @@ img { max-width: 100%; }
 
 @media (prefers-reduced-motion: reduce) {
   #strip-name, #strip-name > span { transition: none; animation: none; }
+  .live-call__dot, .live-call__spinner { animation: none; }
 }

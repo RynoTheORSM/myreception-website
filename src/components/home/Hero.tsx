@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useReducedMotion from "@/hooks/useReducedMotion";
 import useTurnstile from "@/hooks/useTurnstile";
-import Toast from "@/components/Toast";
+import useRetellCall, { WebCallError } from "@/hooks/useRetellCall";
+import LiveCallBar from "@/components/home/LiveCallBar";
 import { supabase } from "@/lib/supabase";
 import { SCENARIOS } from "@/lib/scenarios";
 
-const TOAST_MS = 6000;
 const SCENARIO_COUNT = SCENARIOS.length;
 
 /** Slice `str` given the typewriter has typed `avail` chars overall and this
@@ -22,44 +22,40 @@ const Hero = () => {
   // Turnstile blocked/timed out, or Supabase env vars missing — either way the
   // demo can't run, so say so instead of leaving a forever-disabled button.
   const demoUnavailable = turnstileFailed || !supabase;
-  const [connecting, setConnecting] = useState(false);
-  const [toast, setToast] = useState<{ message: string; detail: string } | null>(null);
-  // Bumped on every submit so a re-submit restarts the auto-dismiss timer.
-  const [toastKey, setToastKey] = useState(0);
 
-  useEffect(() => {
-    if (!toast) return;
-    const id = window.setTimeout(() => setToast(null), TOAST_MS);
-    return () => clearTimeout(id);
-  }, [toast, toastKey]);
-
-  const showToast = (message: string, detail: string) => {
-    setToast({ message, detail });
-    setToastKey((k) => k + 1);
-  };
-
-  const onTalkToLauren = async () => {
-    // Button is disabled until Turnstile hands over a token, so this guard
-    // only catches races (e.g. token expiring mid-click).
-    if (!supabase || !token || connecting) return;
-    setConnecting(true);
+  // useRetellCall runs this after the mic preflight passes; it exchanges the
+  // Turnstile token for a single-use Retell access token.
+  const createWebCall = useCallback(async () => {
+    if (!supabase || !token) throw new WebCallError("connect_failed");
     try {
       const { data, error } = await supabase.functions.invoke("create-retell-web-call", {
         body: { turnstile_token: token },
       });
-      if (error || !data?.ok) {
-        console.error("create-retell-web-call failed", error ?? data);
-        showToast("Couldn't start the demo.", "Give it another go in a moment.");
-        return;
+      if (error) {
+        console.error("create-retell-web-call failed", error);
+        // FunctionsHttpError carries the Response; 429 is the per-IP demo cap.
+        const status = (error as { context?: { status?: number } }).context?.status;
+        throw new WebCallError(status === 429 ? "rate_limited" : "connect_failed");
       }
-      // TODO(demo voice call): data.access_token is what the next task consumes —
-      // start the browser voice session with retell-client-js-sdk here.
-      if (import.meta.env.DEV) console.log("create-retell-web-call ok", data);
-      showToast("Verified.", "Live demo calling is launching soon — email hello@myreception.com.au to hear Lauren now.");
+      if (!data?.ok || typeof data?.access_token !== "string") {
+        console.error("create-retell-web-call bad payload", data);
+        throw new WebCallError("connect_failed");
+      }
+      return data.access_token;
     } finally {
-      setConnecting(false);
       reset(); // Turnstile tokens are single-use; re-arm for the next click.
     }
+  }, [token, reset]);
+
+  const { status, errorKind, elapsedSec, endedAtLimit, agentTalking, start, hangUp } =
+    useRetellCall(createWebCall);
+  const callBusy = status === "connecting" || status === "live";
+
+  const onTalkToLauren = () => {
+    // Button is disabled until Turnstile hands over a token, so this guard
+    // only catches races (e.g. token expiring mid-click).
+    if (!supabase || !token || callBusy) return;
+    void start();
   };
 
   useEffect(() => {
@@ -94,10 +90,10 @@ const Hero = () => {
             className="btn btn--lg"
             id="talk-to-lauren"
             type="button"
-            disabled={demoUnavailable || !token || connecting}
+            disabled={demoUnavailable || !token || callBusy}
             onClick={onTalkToLauren}
           >
-            {connecting ? "Connecting…" : "Talk to Lauren"}
+            {status === "connecting" ? "Connecting…" : status === "live" ? "Live with Lauren" : "Talk to Lauren"}
           </button>
           {/* TODO: wire the sample-call audio when the recording exists.
               Until then it's decorative — hidden from AT, dimmed, badged. */}
@@ -119,8 +115,21 @@ const Hero = () => {
           <p className="hero__note" role="status">
             Demo temporarily unavailable — email <a href="mailto:hello@myreception.com.au">hello@myreception.com.au</a> to book a call.
           </p>
+        ) : status === "idle" ? (
+          <p className="hero__note">
+            Live demo — ask her if she's human; she'll tell you straight.
+            <br />
+            This connects your mic to a real AI call — nothing is saved.
+          </p>
         ) : (
-          <p className="hero__note">Live demo — ask her if she's human; she'll tell you straight.</p>
+          <LiveCallBar
+            status={status}
+            errorKind={errorKind}
+            elapsedSec={elapsedSec}
+            endedAtLimit={endedAtLimit}
+            agentTalking={agentTalking}
+            onHangUp={hangUp}
+          />
         )}
       </div>
       <div className="call-panel">
@@ -147,14 +156,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      {toast && (
-        <Toast
-          key={toastKey}
-          message={toast.message}
-          detail={toast.detail}
-          onDismiss={() => setToast(null)}
-        />
-      )}
     </header>
   );
 };

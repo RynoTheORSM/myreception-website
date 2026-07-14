@@ -733,7 +733,9 @@ img { max-width: 100%; }
   .call-panel { padding: 20px; }
   .call-panel__label { font-size: 11px; letter-spacing: 1px; }
   .call-panel__pill { font-size: 11px; padding: 3px 10px; }
-  .call-panel__body { height: 384px; gap: 10px; }
+  /* Fixed height (never grows with content) sized so the longest scenario
+     clears it on 360px-wide viewports and up. */
+  .call-panel__body { height: 400px; gap: 10px; }
   .bubble { padding: 10px 14px; }
   .bubble--caller { margin-left: 18px; }
   .bubble__who { font-size: 11px; margin-bottom: 3px; }

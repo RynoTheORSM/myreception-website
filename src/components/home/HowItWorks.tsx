@@ -126,7 +126,12 @@ const Stage = ({ focus }: { focus: number }) => (
 /* Scroll-linked focus, rAF-throttled: maps the section's travel past the
    reading line (70% down the viewport) to 0..1. On mobile that's the card
    crossing the line; on desktop the row's transit through it. Plain
-   listeners — nothing can capture the scroll. */
+   listeners — nothing can capture the scroll. The 1.25 stretch spreads the
+   four states over a quarter more scroll so the sweep doesn't feel rushed;
+   the final state stays reachable because p tends to at least 1/1.25 = 0.8
+   (> 3/4) by the time the section leaves the viewport. */
+const SWEEP_STRETCH = 1.25;
+
 const useScrollFocus = (ref: RefObject<HTMLElement | null>) => {
   const [focus, setFocus] = useState(0);
   useEffect(() => {
@@ -136,7 +141,7 @@ const useScrollFocus = (ref: RefObject<HTMLElement | null>) => {
     const update = () => {
       raf = 0;
       const r = el.getBoundingClientRect();
-      const p = (0.7 * window.innerHeight - r.top) / r.height;
+      const p = (0.7 * window.innerHeight - r.top) / (r.height * SWEEP_STRETCH);
       setFocus(Math.min(N - 1, Math.max(0, Math.floor(p * N))));
     };
     const schedule = () => {

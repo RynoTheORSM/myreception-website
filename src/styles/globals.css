@@ -498,18 +498,25 @@ img { max-width: 100%; }
 .mini-email__to { font-weight: 500; font-size: 12px; color: var(--slate); margin-top: 2px; }
 .mini-dash-note { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 13px; color: var(--ink); }
 
-/* ---- CTA strip (single-line, low-weight, after How it works) ---- */
+/* ---- Sign-up CTA banners (strip after How it works + dashboard) ----
+   Horizontal, left-aligned to the page's editorial rhythm: text left,
+   button right; tinted like .aside-card--tint / .call-panel. */
 .cta-strip { border-top: 1px solid var(--mist-border); }
-.cta-strip__inner {
+.cta-strip__inner { padding-top: 40px; padding-bottom: 40px; }
+.cta-banner {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px 20px;
-  padding-top: 28px;
-  padding-bottom: 28px;
+  justify-content: space-between;
+  gap: 20px 40px;
+  background: var(--mist);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
 }
-.cta-strip__text { font-family: var(--font-heading); font-weight: 600; font-size: 17px; color: var(--ink); }
+.cta-banner__title { font-family: var(--font-heading); font-weight: 700; font-size: 22px; letter-spacing: -0.2px; color: var(--ink); }
+.cta-banner__sub { font-weight: 500; font-size: 15px; color: var(--slate); margin-top: 6px; }
+.cta-banner__lead { font-family: var(--font-heading); font-weight: 600; font-size: 17px; color: var(--ink); }
+.cta-banner .btn { flex-shrink: 0; }
+.cta-banner--dash { margin-top: 28px; }
 
 /* ---- You see everything ---- */
 .see-head { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-bottom: 36px; }
@@ -605,10 +612,6 @@ img { max-width: 100%; }
   color: var(--ink);
 }
 
-/* Compact inline CTA card under the dashboard mockup */
-.dash-cta { display: flex; justify-content: center; margin-top: 24px; }
-.dash-cta .btn { box-shadow: var(--shadow-card); }
-
 /* ---- Missed-call calculator ---- */
 .calc { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
 .calc__left .kicker { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--ink); }
@@ -641,21 +644,12 @@ img { max-width: 100%; }
 }
 .calc__result-value small { font-size: 16px; font-weight: 600; color: var(--slate); letter-spacing: 0; }
 
-/* CTA under the calculator — quotes the live weekly figure. */
-.calc-cta {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 18px;
-  text-align: center;
-  margin-top: 16px;
-  padding-top: 32px;
-  border-top: 1px solid var(--mist-border);
-}
-.calc-cta__line { font-family: var(--font-heading); font-weight: 600; font-size: 19px; color: var(--ink); }
-.calc-cta__line strong { color: var(--workshop-blue); font-weight: 700; }
-.calc-cta .btn { white-space: normal; }
+/* CTA inside the calculator card — reads as a continuation of the result
+   the visitor just calculated (figure binding shared with .calc__result). */
+.calc__cta { display: grid; gap: 14px; margin-top: 18px; }
+.calc__cta-line { font-family: var(--font-heading); font-weight: 600; font-size: 16px; line-height: 1.45; color: var(--ink); }
+.calc__cta-line strong { color: var(--workshop-blue); font-weight: 700; }
+.calc__cta .btn { white-space: normal; }
 
 /* ---- Rate card + straight answers ---- */
 .rates { display: grid; grid-template-columns: 7fr 4fr; gap: 72px; }
@@ -857,10 +851,14 @@ img { max-width: 100%; }
   .dash-row__status { justify-content: flex-end; font-size: 12px; }
   .dash-row--extra { display: none; }
 
-  .cta-strip__inner { padding-top: 20px; padding-bottom: 20px; text-align: center; }
-  .cta-strip__text { font-size: 15px; }
-
-  .dash-cta { margin-top: 16px; }
+  .cta-strip__inner { padding-top: 24px; padding-bottom: 24px; }
+  /* Banners stack: text above a full-width button, everything left-aligned. */
+  .cta-banner { flex-direction: column; align-items: stretch; gap: 16px; padding: 20px; }
+  .cta-banner__title { font-size: 19px; }
+  .cta-banner__sub { font-size: 14px; margin-top: 4px; }
+  .cta-banner__lead { font-size: 15px; }
+  .cta-banner .btn { white-space: normal; }
+  .cta-banner--dash { margin-top: 20px; }
 
   .calc { grid-template-columns: 1fr; gap: 20px; }
   .calc__left .kicker { margin-bottom: 14px; padding-bottom: 10px; }
@@ -872,8 +870,8 @@ img { max-width: 100%; }
   .calc__result-label { font-size: 14px; }
   .calc__result-value { font-size: 28px; }
   .calc__result-value small { font-size: 13px; }
-  .calc-cta { gap: 14px; margin-top: 8px; padding-top: 22px; }
-  .calc-cta__line { font-size: 16px; }
+  .calc__cta { gap: 12px; margin-top: 16px; }
+  .calc__cta-line { font-size: 15px; }
 
   .rates { grid-template-columns: 1fr; gap: 40px; }
   .rate-row { padding: 14px 0; }

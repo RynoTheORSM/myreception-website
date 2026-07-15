@@ -69,8 +69,9 @@ const DashboardShowcase = () => (
           </div>
         </div>
       </div>
-      <div className="dash-cta">
-        <a className="btn btn--sm" href="#get-started">Set up your own agent and dashboard</a>
+      <div className="cta-banner cta-banner--dash">
+        <p className="cta-banner__lead">Personal setup, and a real test call before you go live.</p>
+        <a className="btn btn--lg" href="#get-started">Set up your own agent and dashboard</a>
       </div>
     </div>
   </section>

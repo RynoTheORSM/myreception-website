@@ -18,8 +18,13 @@ const Home = () => (
       <HowItWorks />
       <section className="cta-strip" aria-label="Get started">
         <div className="container cta-strip__inner">
-          <span className="cta-strip__text">Ready to stop missing calls?</span>
-          <a className="btn btn--sm" href="#get-started">Get Lauren on your phones</a>
+          <div className="cta-banner">
+            <div>
+              <p className="cta-banner__title">Ready to stop missing calls?</p>
+              <p className="cta-banner__sub">Two minutes to sign up. $0 setup, no contract — leave any month.</p>
+            </div>
+            <a className="btn btn--lg" href="#get-started">Get Lauren on your phones</a>
+          </div>
         </div>
       </section>
       <DashboardShowcase />

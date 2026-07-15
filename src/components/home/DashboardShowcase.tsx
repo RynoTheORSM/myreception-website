@@ -4,7 +4,7 @@ const DashboardShowcase = () => (
       <div className="see-head">
         <div>
           <h2 className="kicker">You see everything</h2>
-          <p className="see-head__claim">You're not handing your phones to a black box.</p>
+          <p className="see-head__claim">Your calls. Your data. Your dashboard.</p>
         </div>
         <p className="see-head__copy">Every call is recorded and transcribed, and every lead is logged. Your dashboard shows what was said, what it's worth, and what the month is costing — down to the minute.</p>
       </div>
@@ -68,6 +68,9 @@ const DashboardShowcase = () => (
             </div>
           </div>
         </div>
+      </div>
+      <div className="dash-cta">
+        <a className="btn btn--sm" href="#get-started">Set up your own agent and dashboard</a>
       </div>
     </div>
   </section>

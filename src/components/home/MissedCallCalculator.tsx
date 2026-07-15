@@ -41,9 +41,15 @@ const MissedCallCalculator = () => {
             </label>
           </div>
           <div className="calc__result">
-            <span className="calc__result-label">Walking to a competitor</span>
+            <span className="calc__result-label">Gone to a competitor</span>
             <span className="calc__result-value" aria-live="polite" aria-atomic="true">{fmt(weekly)} <small>a week</small></span>
           </div>
+        </div>
+        <div className="calc-cta">
+          <p className="calc-cta__line">
+            That's <strong>{fmt(weekly)}</strong> a week Lauren could be protecting.
+          </p>
+          <a className="btn btn--lg" href="#get-started">Answer every call. Never miss a job. Stay on the tools.</a>
         </div>
       </div>
     </section>

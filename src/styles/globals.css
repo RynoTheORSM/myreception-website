@@ -6,6 +6,10 @@
 
 /* ---- Base ---- */
 *, *::before, *::after { box-sizing: border-box; }
+:root { --nav-h: 76px; }
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
 body {
   font-family: var(--font-body);
   font-weight: 500;
@@ -51,6 +55,9 @@ img { max-width: 100%; }
 .btn--sm { padding: 8px 14px; font-size: 14px; }
 .btn--lg { padding: 14px 28px; font-size: 16px; }
 .btn--block { width: 100%; display: block; }
+.btn--secondary { background: transparent; color: var(--workshop-blue); border-color: var(--workshop-blue); }
+.btn--secondary:hover { background: var(--mist); color: var(--workshop-blue); }
+.btn--secondary:active { background: var(--mist-border); }
 
 /* ---- Form fields (design-system Input / Select) ---- */
 .field { display: grid; gap: 6px; font-family: var(--font-heading); }
@@ -110,11 +117,18 @@ img { max-width: 100%; }
 }
 
 /* ---- Nav ---- */
+/* Sticky so the "Get started" CTA stays reachable past the hero; anchored
+   sections offset themselves below it via scroll-margin-top. */
 .site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 40px;
+  min-height: var(--nav-h);
+  padding: 12px 40px;
   border-bottom: 1px solid var(--mist-border);
 }
 .site-nav__logo { height: 28px; display: block; width: auto; }
@@ -128,7 +142,8 @@ img { max-width: 100%; }
 }
 .site-nav__links a { color: var(--ink); }
 .site-nav__links a.login { color: var(--workshop-blue); }
-.site-nav__login-mobile { display: none; font-family: var(--font-heading); font-weight: 600; font-size: 14px; color: var(--workshop-blue); }
+.site-nav__mobile { display: none; align-items: center; gap: 16px; }
+.site-nav__login-mobile { font-family: var(--font-heading); font-weight: 600; font-size: 14px; color: var(--workshop-blue); white-space: nowrap; }
 
 /* ---- Hero ---- */
 .hero {
@@ -137,7 +152,10 @@ img { max-width: 100%; }
   display: grid;
   grid-template-columns: 1fr 460px;
   gap: 64px;
-  align-items: center;
+  /* Top-aligned, not centered: the columns share a top edge, and the card
+     no longer re-centers (shifts) when the left column's height changes
+     (hero__note ↔ LiveCallBar swap). */
+  align-items: start;
 }
 .hero h1 {
   font-size: 56px;
@@ -356,6 +374,8 @@ img { max-width: 100%; }
 /* ---- Section chrome ---- */
 .section { border-top: 1px solid var(--mist-border); }
 .section--rule { border-top: 3px solid var(--ink); }
+/* Anchor targets land below the sticky nav. */
+.section, .cta { scroll-margin-top: var(--nav-h); }
 .section .container { padding-top: 64px; padding-bottom: 64px; }
 .section-head {
   display: flex;
@@ -478,6 +498,19 @@ img { max-width: 100%; }
 .mini-email__to { font-weight: 500; font-size: 12px; color: var(--slate); margin-top: 2px; }
 .mini-dash-note { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 13px; color: var(--ink); }
 
+/* ---- CTA strip (single-line, low-weight, after How it works) ---- */
+.cta-strip { border-top: 1px solid var(--mist-border); }
+.cta-strip__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  padding-top: 28px;
+  padding-bottom: 28px;
+}
+.cta-strip__text { font-family: var(--font-heading); font-weight: 600; font-size: 17px; color: var(--ink); }
+
 /* ---- You see everything ---- */
 .see-head { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-bottom: 36px; }
 .see-head .kicker { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--ink); }
@@ -572,6 +605,10 @@ img { max-width: 100%; }
   color: var(--ink);
 }
 
+/* Compact inline CTA card under the dashboard mockup */
+.dash-cta { display: flex; justify-content: center; margin-top: 24px; }
+.dash-cta .btn { box-shadow: var(--shadow-card); }
+
 /* ---- Missed-call calculator ---- */
 .calc { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
 .calc__left .kicker { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--ink); }
@@ -603,6 +640,22 @@ img { max-width: 100%; }
   color: var(--workshop-blue);
 }
 .calc__result-value small { font-size: 16px; font-weight: 600; color: var(--slate); letter-spacing: 0; }
+
+/* CTA under the calculator — quotes the live weekly figure. */
+.calc-cta {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+  margin-top: 16px;
+  padding-top: 32px;
+  border-top: 1px solid var(--mist-border);
+}
+.calc-cta__line { font-family: var(--font-heading); font-weight: 600; font-size: 19px; color: var(--ink); }
+.calc-cta__line strong { color: var(--workshop-blue); font-weight: 700; }
+.calc-cta .btn { white-space: normal; }
 
 /* ---- Rate card + straight answers ---- */
 .rates { display: grid; grid-template-columns: 7fr 4fr; gap: 72px; }
@@ -708,12 +761,15 @@ img { max-width: 100%; }
    Mobile — matches the 390px "2a mobile" mockup
    ============================================================ */
 @media (max-width: 880px) {
+  :root { --nav-h: 60px; }
   .container { padding-left: 20px; padding-right: 20px; }
 
-  .site-nav { padding: 14px 20px; }
+  .site-nav { padding: 10px 20px; }
   .site-nav__logo { height: 24px; }
   .site-nav__links { display: none; }
-  .site-nav__login-mobile { display: block; }
+  .site-nav__mobile { display: flex; }
+  /* Compact so the bar stays at --nav-h (min-height governs). */
+  .site-nav__mobile .btn { padding: 6px 12px; font-size: 13px; }
 
   .hero {
     grid-template-columns: 1fr;
@@ -760,7 +816,7 @@ img { max-width: 100%; }
   .hiw-steps--top {
     display: flex;
     position: sticky;
-    top: 0;
+    top: var(--nav-h); /* below the sticky nav */
     z-index: 2;
     background: var(--white);
     padding: 10px 0;
@@ -801,6 +857,11 @@ img { max-width: 100%; }
   .dash-row__status { justify-content: flex-end; font-size: 12px; }
   .dash-row--extra { display: none; }
 
+  .cta-strip__inner { padding-top: 20px; padding-bottom: 20px; text-align: center; }
+  .cta-strip__text { font-size: 15px; }
+
+  .dash-cta { margin-top: 16px; }
+
   .calc { grid-template-columns: 1fr; gap: 20px; }
   .calc__left .kicker { margin-bottom: 14px; padding-bottom: 10px; }
   .calc__claim { font-size: 24px; line-height: 1.2; }
@@ -811,6 +872,8 @@ img { max-width: 100%; }
   .calc__result-label { font-size: 14px; }
   .calc__result-value { font-size: 28px; }
   .calc__result-value small { font-size: 13px; }
+  .calc-cta { gap: 14px; margin-top: 8px; padding-top: 22px; }
+  .calc-cta__line { font-size: 16px; }
 
   .rates { grid-template-columns: 1fr; gap: 40px; }
   .rate-row { padding: 14px 0; }

@@ -16,6 +16,12 @@ const Home = () => (
       <Hero />
       <NameStrip />
       <HowItWorks />
+      <section className="cta-strip" aria-label="Get started">
+        <div className="container cta-strip__inner">
+          <span className="cta-strip__text">Ready to stop missing calls?</span>
+          <a className="btn btn--sm" href="#get-started">Get Lauren on your phones</a>
+        </div>
+      </section>
       <DashboardShowcase />
       <MissedCallCalculator />
       {/* Rate card + straight answers share one section grid */}

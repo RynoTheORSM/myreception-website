@@ -6,7 +6,6 @@ import HowItWorks from "@/components/home/HowItWorks";
 import DashboardShowcase from "@/components/home/DashboardShowcase";
 import MissedCallCalculator from "@/components/home/MissedCallCalculator";
 import RateCard from "@/components/home/RateCard";
-import StraightAnswers from "@/components/home/StraightAnswers";
 import SignupCTA from "@/components/home/SignupCTA";
 
 const Home = () => (
@@ -29,11 +28,11 @@ const Home = () => (
       </section>
       <DashboardShowcase />
       <MissedCallCalculator />
-      {/* Rate card + straight answers share one section grid */}
+      {/* Trust cards (parked/StraightAnswers) removed from this section —
+          reserved for a future trust/FAQ page. */}
       <section className="section" id="pricing">
         <div className="container rates">
           <RateCard />
-          <StraightAnswers />
         </div>
       </section>
       <SignupCTA />

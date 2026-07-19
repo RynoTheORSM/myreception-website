@@ -12,12 +12,12 @@ const MissedCallCalculator = () => {
   return (
     <section className="section">
       <div className="container calc">
-        <div className="calc__left">
-          <h2 className="kicker">What a missed call costs</h2>
-          <p className="calc__claim">Every call you miss rings the next number on the list.</p>
-          <p className="calc__note">A worked example, not a promise — your numbers, your maths.</p>
-        </div>
         <div className="calc__card">
+          <div className="calc__intro">
+            <h2 className="kicker">What a missed call costs</h2>
+            <p className="calc__claim">Every call you miss rings the next number on the list.</p>
+            <p className="calc__note">A worked example, not a promise — your numbers, your maths.</p>
+          </div>
           <div className="calc__fields">
             <label className="field">
               <span>Average job value ($)</span>

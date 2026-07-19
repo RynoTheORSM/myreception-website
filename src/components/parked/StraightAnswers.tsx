@@ -1,3 +1,8 @@
+/* PARKED — not rendered anywhere. Removed from the homepage (July 2026) to
+   reduce front-page density; reserved for a future trust/FAQ page. Copy is
+   preserved exactly — do not edit without checking the design source.
+   Original home: pricing section aside, alongside RateCard in the .rates grid
+   (styles: .rates__aside / .aside-card in globals.css, kept in place). */
 const StraightAnswers = () => (
   <div className="rates__aside">
     <div className="aside-card aside-card--tint">

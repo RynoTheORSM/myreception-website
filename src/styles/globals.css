@@ -123,13 +123,13 @@ img { max-width: 100%; }
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--white);
+  background: var(--mist);
   display: flex;
   align-items: center;
   justify-content: space-between;
   min-height: var(--nav-h);
   padding: 12px 40px;
-  border-bottom: 1px solid var(--mist-border);
+  border-bottom: 2px solid var(--workshop-blue);
 }
 .site-nav__logo { height: 28px; display: block; width: auto; }
 .site-nav__links {
@@ -613,18 +613,27 @@ img { max-width: 100%; }
 }
 
 /* ---- Missed-call calculator ---- */
-.calc { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
-.calc__left .kicker { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--ink); }
+/* Headline + supporting text live inside the card (same merge treatment as
+   the CTA in the result) so the section reads as one unit, not a heading
+   block above a separate card. */
+.calc__card {
+  border: 1px solid var(--mist-border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.calc__intro { margin-bottom: 28px; }
+.calc__intro .kicker { margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--ink); }
 .calc__claim {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 32px;
-  line-height: 1.15;
+  font-size: 26px;
+  line-height: 1.2;
   letter-spacing: -0.3px;
   color: var(--ink);
 }
-.calc__note { font-weight: 500; font-size: 15px; line-height: 1.6; color: var(--slate); margin: 16px 0 0; }
-.calc__card { border: 1px solid var(--mist-border); border-radius: var(--radius-lg); padding: 32px; }
+.calc__note { font-weight: 500; font-size: 14px; line-height: 1.6; color: var(--slate); margin: 8px 0 0; }
 .calc__fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .calc__result {
   display: flex;
@@ -651,8 +660,10 @@ img { max-width: 100%; }
 .calc__cta-line strong { color: var(--workshop-blue); font-weight: 700; }
 .calc__cta .btn { white-space: normal; }
 
-/* ---- Rate card + straight answers ---- */
-.rates { display: grid; grid-template-columns: 7fr 4fr; gap: 72px; }
+/* ---- Rate card (trust aside parked — see components/parked) ----
+   Centered at the calculator card's width so the two adjacent sections
+   share left edges. */
+.rates { display: grid; grid-template-columns: minmax(0, 720px); justify-content: center; }
 .rates__card .kicker { margin-bottom: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--ink); }
 .rate-row {
   display: flex;
@@ -860,11 +871,11 @@ img { max-width: 100%; }
   .cta-banner .btn { white-space: normal; }
   .cta-banner--dash { margin-top: 20px; }
 
-  .calc { grid-template-columns: 1fr; gap: 20px; }
-  .calc__left .kicker { margin-bottom: 14px; padding-bottom: 10px; }
-  .calc__claim { font-size: 24px; line-height: 1.2; }
-  .calc__note { font-size: 13px; margin-top: 6px; }
   .calc__card { padding: 20px; }
+  .calc__intro { margin-bottom: 20px; }
+  .calc__intro .kicker { margin-bottom: 12px; padding-bottom: 10px; }
+  .calc__claim { font-size: 22px; }
+  .calc__note { font-size: 13px; margin-top: 6px; }
   .calc__fields { grid-template-columns: 1fr; gap: 14px; }
   .calc__result { margin-top: 14px; padding-top: 14px; }
   .calc__result-label { font-size: 14px; }
@@ -873,7 +884,7 @@ img { max-width: 100%; }
   .calc__cta { gap: 12px; margin-top: 16px; }
   .calc__cta-line { font-size: 15px; }
 
-  .rates { grid-template-columns: 1fr; gap: 40px; }
+  .rates { grid-template-columns: 1fr; }
   .rate-row { padding: 14px 0; }
   .rate-row__label { font-size: 15px; }
   .rate-row__value { font-size: 20px; }

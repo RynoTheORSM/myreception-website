@@ -159,12 +159,41 @@ const useScrollFocus = (ref: RefObject<HTMLElement | null>) => {
   return focus;
 };
 
+/* Settle time: the scroll-derived focus above is only a target. A fast flick
+   snaps that target across several states at once; the displayed focus walks
+   toward it one state at a time with a minimum dwell per step, so every
+   crossfade plays out visibly no matter how hard the visitor scrolls. Slow
+   scrolling is unaffected — single-step changes apply immediately (the dwell
+   since the last step has long elapsed). */
+const STEP_MIN_MS = 450;
+
+const useSettledFocus = (target: number) => {
+  const [display, setDisplay] = useState(target);
+  const lastStep = useRef(-Infinity);
+  useEffect(() => {
+    if (display === target) return;
+    const step = () => {
+      lastStep.current = performance.now();
+      setDisplay((d) => d + Math.sign(target - d));
+    };
+    const wait = STEP_MIN_MS - (performance.now() - lastStep.current);
+    if (wait <= 0) {
+      step();
+      return;
+    }
+    const t = window.setTimeout(step, wait);
+    return () => window.clearTimeout(t);
+  }, [display, target]);
+  return display;
+};
+
 /* Natural flow on every width — no pin, so the section joins its neighbours
    with the page's standard 64px rhythm and focus advances as the cards cross
    the reading line. */
 const FlowSweep = () => {
   const ref = useRef<HTMLElement>(null);
-  const focus = useScrollFocus(ref);
+  const target = useScrollFocus(ref);
+  const focus = useSettledFocus(target);
   return (
     <section ref={ref} className="section section--rule" id="how-it-works">
       <Stage focus={focus} />

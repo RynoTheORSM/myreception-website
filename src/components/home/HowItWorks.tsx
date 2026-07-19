@@ -138,19 +138,33 @@ const useScrollFocus = (ref: RefObject<HTMLElement | null>) => {
     const el = ref.current;
     if (!el) return;
     let raf = 0;
+    let armed = false;
     const update = () => {
       raf = 0;
       const r = el.getBoundingClientRect();
+      // Mid-layout read (fonts/images still settling): keep the last good
+      // target rather than dividing by zero, which would pin it at N-1.
+      if (!r.height) return;
       const p = (0.7 * window.innerHeight - r.top) / (r.height * SWEEP_STRETCH);
       setFocus(Math.min(N - 1, Math.max(0, Math.floor(p * N))));
     };
     const schedule = () => {
-      if (!raf) raf = requestAnimationFrame(update);
+      if (armed && !raf) raf = requestAnimationFrame(update);
     };
-    update();
+    // The target starts at state 0 and stays there until the visitor's first
+    // real input gesture. Scroll events alone can't arm it: Chrome fires one
+    // when it restores the scroll position after a reload, which would seed a
+    // mid-section focus on a page the visitor hasn't touched yet.
+    const arm = () => {
+      armed = true;
+      schedule();
+    };
+    const ARM_EVENTS = ["wheel", "touchstart", "keydown", "pointerdown"] as const;
+    ARM_EVENTS.forEach((e) => window.addEventListener(e, arm, { passive: true, once: true }));
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
     return () => {
+      ARM_EVENTS.forEach((e) => window.removeEventListener(e, arm));
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
       if (raf) cancelAnimationFrame(raf);
@@ -168,7 +182,9 @@ const useScrollFocus = (ref: RefObject<HTMLElement | null>) => {
 const STEP_MIN_MS = 450;
 
 const useSettledFocus = (target: number) => {
-  const [display, setDisplay] = useState(target);
+  // Always open on State 01 — never seed from the incoming target, which can
+  // be nonzero before the visitor has scrolled (restored scroll positions).
+  const [display, setDisplay] = useState(0);
   const lastStep = useRef(-Infinity);
   useEffect(() => {
     if (display === target) return;

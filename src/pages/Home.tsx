@@ -22,7 +22,7 @@ const Home = () => (
               <p className="cta-banner__title">Ready to stop missing calls?</p>
               <p className="cta-banner__sub">Two minutes to sign up. $0 setup, no contract — leave any month.</p>
             </div>
-            <a className="btn btn--lg" href="#get-started">Get Lauren on your phones</a>
+            <a className="btn btn--lg" href="https://app.myreception.com.au/onboard">Get Lauren on your phones</a>
           </div>
         </div>
       </section>
